@@ -3,10 +3,6 @@
 namespace modele\dao;
 
 use modele\metier\Resto;
-use modele\dao\CritiqueDAO;
-use modele\dao\TypeCuisineDAO;
-use modele\dao\PhotoDAO;
-use modele\dao\Bdd;
 use PDO;
 use PDOException;
 use Exception;
@@ -337,6 +333,69 @@ class RestoDAO {
         }
         return $lesObjets;
     }
-    
+
+    public static function getLastId()
+    {
+        try {
+            $requete = "SELECT MAX(idR) FROM resto";
+            $stmt = Bdd::getConnexion()->prepare($requete);
+            $ok = $stmt->execute();
+            // attention, $ok = true pour un select ne retournant aucune ligne
+            if ($ok && $stmt->rowCount() > 0) {
+                $enreg = $stmt->fetch(PDO::FETCH_ASSOC);
+                $id = $enreg['MAX(idR)'];
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erreur dans la méthode " . get_called_class() . "::getOneById : <br/>" . $e->getMessage());
+        }
+        return $id;
+    }
+
+    public static function addTC(Resto $unRestaurant, \modele\metier\TypesCuisine $unTC)
+    {
+        try {
+            $requete = "INSERT INTO typecresto (idR, idTC) VALUES (:idR, :idTC)";
+            $stmt = Bdd::getConnexion()->prepare($requete);
+            $idR = $unRestaurant->getIdR();
+            $idTC = $unTC->getIdTC();
+            $stmt->bindParam(':idR', $idR, PDO::PARAM_INT);
+            $stmt->bindParam(':idTC', $idTC, PDO::PARAM_INT);
+            $ok = $stmt->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Erreur dans la méthode " . get_called_class() . "::addTC : <br/>" . $e->getMessage());
+        }
+        return $ok;
+    }
+
+    public static function insert(Resto $unRestaurant)
+    {
+        try {
+            $requete = "INSERT INTO resto (nomR, numAdrR, voieAdrR, cpR, villeR, latitudeDegR, longitudeDegR, horairesR, descR) VALUES (:nomR, :numAdrR, :voieAdrR, :cpR, :villeR, :latitudeDegR, :longitudeDegR, :horairesR, :descR)";
+            $stmt = Bdd::getConnexion()->prepare($requete);
+            $nomR = $unRestaurant->getNomR();
+            $numAdrR = $unRestaurant->getNumAdr();
+            $voieAdrR = $unRestaurant->getVoieAdr();
+            $cpR = $unRestaurant->getCpR();
+            $villeR = $unRestaurant->getVilleR();
+            $latitudeDegR = $unRestaurant->getLatitudeDegR();
+            $longitudeDegR = $unRestaurant->getLongitudeDegR();
+            $horairesR = $unRestaurant->getHorairesR();
+            $descR = $unRestaurant->getDescR();
+            $stmt->bindParam(':nomR', $nomR, PDO::PARAM_STR);
+            $stmt->bindParam(':numAdrR', $numAdrR, PDO::PARAM_INT);
+            $stmt->bindParam(':voieAdrR', $voieAdrR, PDO::PARAM_STR);
+            $stmt->bindParam(':cpR', $cpR, PDO::PARAM_INT);
+            $stmt->bindParam(':villeR', $villeR, PDO::PARAM_STR);
+            $stmt->bindParam(':latitudeDegR', $latitudeDegR, PDO::PARAM_STR);
+            $stmt->bindParam(':longitudeDegR', $longitudeDegR, PDO::PARAM_STR);
+            $stmt->bindParam(':horairesR', $horairesR, PDO::PARAM_STR);
+            $stmt->bindParam(':descR', $descR, PDO::PARAM_STR);
+            $ok = $stmt->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Erreur dans la méthode " . get_called_class() . "::insert : <br/>" . $e->getMessage());
+        }
+        return $ok;
+    }
+
 
 }

@@ -46,10 +46,16 @@
                 <li></li> 
                 <li><a href="./?action=cgu">CGU</a></li>
                 <?php 
-                    if ($GLOBALS['isLoggedOn']) { 
+                    if ($GLOBALS['isLoggedOn']) {
                  ?>
                     <li><a href="./?action=profil"><img src="images/profil.png" alt="loupe" />Mon Profil</a></li>
-                <?php } else {
+
+                        <?php
+                    } else if ($GLOBALS['isLoggedOnAsAdmin']) {
+                        ?>
+                    <li><a href="./?action=panel"><img src="images/profil.png" alt="loupe" />Panel</a></li>
+                        <?php
+                    } else {
                     ?>
                     <li><a href="./?action=connexion"><img src="images/profil.png" alt="loupe" />Connexion</a></li>
                 <?php } 

@@ -25,13 +25,18 @@ function controleurPrincipal(string $action): string
     $lesActions["commenter"] = "commenter.php";
     $lesActions["supprimerCritique"] = "supprimerCritique.php";
     $lesActions["admin"] = "admin/admin.php";
+    $lesActions["panel"] = "admin/panel.php";
     $lesActions["gererLesRestaurants"] = "admin/gererLesRestaurants.php";
-    $lesActions["modifierRestaurants"] = "admin/modifierRestaurants.php";
-    $lesActions["supprimerRestaurants"] = "admin/supprimerRestaurants.php";
-    $lesActions["updTypeCuisine"] = "admin/updTypeCuisine.php";
-    $lesActions["updProfilAdmin"] = "admin/updProfilAdmin.php";
-    $lesActions["ajouterRestaurants"] = "admin/ajouterRestaurants.php";
+    $lesActions["updRestaurant"] = "admin/updRestaurant.php";
+    $lesActions["supprimerRestaurants"] = "admin/supprimerRestaurant.php";
+    $lesActions["ajouterUnRestaurant"] = "admin/ajouterUnRestaurant.php";
+    $lesActions["gererLesTypesDeCuisines"] = "admin/gererLesTypesDeCuisines.php";
+    $lesActions["supprimerUnTypeDeCuisine"] = "admin/supprimerUnTypeDeCuisine.php";
+    $lesActions["ajouterTypesDeCuisines"] = "admin/ajouterTypesDeCuisines.php";
     $lesActions["gererLesUtilisateurs"] = "admin/gererLesUtilisateurs.php";
+    $lesActions["supprimerUnUtilisateur"] = "admin/supprimerUnUtilisateur.php";
+    $lesActions["updProfilAdmin"] = "admin/updProfilAdmin.php";
+
 
     
     if (array_key_exists($action, $lesActions)) {

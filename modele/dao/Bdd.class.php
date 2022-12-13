@@ -1,7 +1,6 @@
 <?php
 namespace modele\dao;
 use \PDO;
-//use \PDOException;
 
 /**
  * Description of Bdd
@@ -18,7 +17,7 @@ class Bdd {
      */
     private static ?PDO $pdo=null;
     private static $login = "resto_util";   // login utilisateur de la BDD
-    private static $mdp = "secret";         // mdp  utilisateur de la BDD
+    private static $mdp = "oDJTJS?6g!5KQ4!F";         // mdp  utilisateur de la BDD
     private static $bd = "resto1";          // nom de la BDD
     private static $serveur = "localhost";  // nom de domaine du serveur de BDD
     private static $pdoOptions = array  (

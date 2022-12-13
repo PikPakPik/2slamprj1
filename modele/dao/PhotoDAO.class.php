@@ -3,7 +3,6 @@
 namespace modele\dao;
 
 use modele\metier\Photo;
-use modele\dao\Bdd;
 use PDO;
 use PDOException;
 use Exception;
@@ -63,6 +62,22 @@ class PhotoDAO {
         }
         return $lesObjets;
     }
-    
+
+    public static function ajouter(Photo $unePhoto)
+    {
+        try {
+            $requete = "INSERT INTO photo (idP, cheminP) VALUES (:idP, :cheminP)";
+            $stmt = Bdd::getConnexion()->prepare($requete);
+            $idP = $unePhoto->getIdP();
+            $stmt->bindParam(':idP', $idP, PDO::PARAM_INT);
+            $cheminP = $unePhoto->getCheminP();
+            $stmt->bindParam(':cheminP', $cheminP, PDO::PARAM_STR);
+            $ok = $stmt->execute();
+        } catch (PDOException $e) {
+            throw new Exception("Erreur dans la méthode " . get_called_class() . "::ajouter : <br/>" . $e->getMessage());
+        }
+        return $ok;
+    }
+
 
 }

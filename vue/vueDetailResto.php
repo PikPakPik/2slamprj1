@@ -113,7 +113,7 @@
         ?>
         <li>
             <span>
-                <?= $uneCritique->getLeUtilisateur()->getPseudoU() ?> 
+                <?= $uneCritique->getLeUtilisateur()->getPseudoU() ?>
                 <?php
                 // Si la critique est émise par l'utilisteur actuellement connecté
                 if ($uneCritique->getLeUtilisateur()->getIdU() == $idU) {

@@ -3,7 +3,6 @@
 namespace modele\dao;
 use modele\metier\TypesCuisine;
 
-use modele\dao\Bdd;
 use PDO;
 use PDOException;
 use Exception;
@@ -109,6 +108,34 @@ class TypeCuisineDAO {
             throw new Exception("Erreur dans la méthode " . get_called_class() . "::getAllNonPreferesByIdU : <br/>" . $e->getMessage());
         }
         return $lesObjets;
+    }
+
+    /**
+     * Supprime le type de cuisine $objet de la base de données
+     * @param string $idTC identifiant du type de cuisine à supprimer
+     * @return int nombre de lignes supprimées
+     * @throws Exception
+     */
+    public static function delete(string $idTC): int
+    {
+        $nb = 0;
+        try {
+            $requete = "DELETE FROM typecresto WHERE idTC=:idTC";
+            $stmt = Bdd::getConnexion()->prepare($requete);
+            $stmt->bindParam(':idTC', $idTC, PDO::PARAM_STR);
+            $stmt->execute();
+
+            $requete = "DELETE FROM typescuisine WHERE idTC=:idTC";
+            $stmt = Bdd::getConnexion()->prepare($requete);
+            $stmt->bindParam(':idTC', $idTC, PDO::PARAM_STR);
+            $ok = $stmt->execute();
+            if ($ok) {
+                $nb = $stmt->rowCount();
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erreur dans la méthode " . get_called_class() . "::delete : <br/>" . $e->getMessage());
+        }
+        return $nb;
     }
 
 }

@@ -16,8 +16,14 @@ Bdd::connecter();
 
 $titre = "authentification";
 
-// Fin de la ssession
-logout();           
+
+if(isLoggedOn()) {
+    logout();
+} else if (isLoggedOnAsAdmin()) {
+    logoutAsAdmin();
+} else {
+    ajouterMessage("Vous n'êtes pas connecté");
+}
 
 // Construction de la vue
 $GLOBALS['isLoggedOn'] = false;

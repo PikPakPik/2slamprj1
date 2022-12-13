@@ -32,6 +32,7 @@ $fichier = controleurPrincipal($action);
 // Appel du contrôleur
 try{
     $GLOBALS['isLoggedOn'] = isLoggedOn();  // vérifier si un utilisateur est connecté de façon licite
+    $GLOBALS['isLoggedOnAsAdmin'] = isLoggedOnAsAdmin();  // vérifier si un utilisateur est connecté de façon licite
     require_once "$racine/controleur/$fichier";
 } catch (Throwable $e) {    // Throwable : inclus les exceptions de type Exception et de type Error
     // Si une exception est levée, on la traite en affichant un message, sans interrompre l'application et afficher la ligne de l'erreur et le fichier

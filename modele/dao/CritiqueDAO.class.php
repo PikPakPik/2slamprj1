@@ -4,7 +4,6 @@ namespace modele\dao;
 
 use modele\metier\Critique;
 use modele\metier\Utilisateur;
-use modele\dao\Bdd;
 use PDO;
 use PDOException;
 use Exception;

@@ -117,3 +117,37 @@ img.aimer{
 .TC-txt b {
 	color: red;
 }
+
+#addResto {
+	display: grid;
+}
+
+#addResto input {
+	margin: 5px;
+}
+
+#addResto #descR {
+	width: fit-content;
+	height: 100px;
+}
+
+#addResto input[type="text"]  {
+	width: 290px;
+}
+
+#addResto input[type="number"]  {
+	width: 290px;
+}
+
+#addResto input[type="submit"] {
+	width: 100px;
+	transition: 0.5s;
+}
+
+#addResto input[type="submit"]:hover {
+	background-color: #4CAF50;
+	transition: 0.5s;
+}
+#addResto table {
+	width: fit-content;
+}

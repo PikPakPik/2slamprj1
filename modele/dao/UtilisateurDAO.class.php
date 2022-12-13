@@ -3,10 +3,6 @@
 namespace modele\dao;
 
 use modele\metier\Utilisateur;
-use modele\metier\Resto;
-use modele\dao\RestoDAO;
-use modele\dao\TypeCuisineDAO;
-use modele\dao\Bdd;
 use PDO;
 use PDOException;
 use Exception;
@@ -84,6 +80,39 @@ class UtilisateurDAO {
         }
         return $leUser;
     }
+
+    /**
+     * Retourne la liste de tous les utilisateurs
+     * @return array tableau d'objets Utilisateur
+     * @throws Exception transmission des erreurs PDO éventuelles
+     */
+    public static function getAll(): array {
+        $lesUsers = array();
+        try {
+            $requete = "SELECT * FROM utilisateur";
+            $stmt = Bdd::getConnexion()->prepare($requete);
+            $ok = $stmt->execute();
+            // attention, $ok = true pour un select ne retournant aucune ligne
+            if ($ok) {
+                while ($enreg = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $idU = $enreg['idU'];
+                    $lesRestosAimes = RestoDAO::getAimesByIdU($idU);
+                    $lesTypesCuisinePreferes = TypeCuisineDAO::getPreferesByIdU($idU);
+
+                    $leUser = new Utilisateur($idU, $enreg['mailU'], $enreg['mdpU'], $enreg['pseudoU']);
+
+                    $leUser->setLesRestosAimes($lesRestosAimes);
+                    $leUser->setLesTypesCuisinePreferes($lesTypesCuisinePreferes);
+
+                    $lesUsers[] = $leUser;
+                }
+            }
+        } catch (PDOException $e) {
+            throw new Exception("Erreur dans la méthode " . get_called_class() . "::getAll : <br/>" . $e->getMessage());
+        }
+        return $lesUsers;
+    }
+    
 
     /**
      * Ajouter un enregistrement à la table utilisateur d'après un objet Utilisateur
@@ -175,5 +204,41 @@ class UtilisateurDAO {
         }
     }
 
+    /**
+     * Supprimer un enregistrement à la table utilisateur d'après son identifiant
+     * @param int $idU identifiant de l'utilisateur à supprimer
+     * @return bool true si l'opération réussit, false sinon
+     * @throws Exception transmission des erreurs PDO éventuelles
+     */
 
+    public static function delete(int $idU): bool
+    {
+        $ok = false;
+        try {
+            $updateAllCritique = "UPDATE critiquer SET idU = 0 WHERE idU = :idU";
+            $updateAllAime = "UPDATE aimer SET idU = 0 WHERE idU = :idU";
+            $deleteTCU = "DELETE FROM utilisateur_typecuisine WHERE idU = :idU";
+
+            $stmt = Bdd::getConnexion()->prepare($updateAllCritique);
+            $stmt->bindValue(':idU', $idU, PDO::PARAM_INT);
+            $ok = $stmt->execute();
+
+            $stmt = Bdd::getConnexion()->prepare($updateAllAime);
+            $stmt->bindValue(':idU', $idU, PDO::PARAM_INT);
+            $ok = $stmt->execute();
+
+            $stmt = Bdd::getConnexion()->prepare($deleteTCU);
+            $stmt->bindValue(':idU', $idU, PDO::PARAM_INT);
+            $ok = $stmt->execute();
+
+            $requete = "DELETE FROM utilisateur WHERE idU = :idU";
+            $stmt = Bdd::getConnexion()->prepare($requete);
+            $stmt->bindValue(':idU', $idU, PDO::PARAM_INT);
+            $ok = $stmt->execute();
+
+        } catch (PDOException $e) {
+            throw new Exception("Erreur dans la méthode " . get_called_class() . "::delete : <br/>" . $e->getMessage());
+        }
+        return $ok;
+    }
 }

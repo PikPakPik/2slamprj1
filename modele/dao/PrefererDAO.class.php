@@ -2,8 +2,6 @@
 
 namespace modele\dao;
 
-use modele\dao\Bdd;
-use modele\metier\TypesCuisine;
 use PDO;
 use PDOException;
 use Exception;

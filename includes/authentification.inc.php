@@ -1,6 +1,7 @@
 <?php
 
 use modele\dao\UtilisateurDAO;
+use modele\dao\AdminDAO;
 
 /* * ******************************************************************
  * Fonctions de gestion de l'authentification à l'aide des sessions
@@ -16,6 +17,9 @@ use modele\dao\UtilisateurDAO;
  */
 function login(string $mailU, string $mdpU): void {
     if (!isset($_SESSION)) {
+        session_start();
+    } else {
+        session_destroy();
         session_start();
     }
     // Rechercher les données relatives à cet utilisateur
@@ -35,6 +39,32 @@ function login(string $mailU, string $mdpU): void {
     }
 }
 
+function loginAsAdmin(string $pseudoA, string $mdpA): void {
+    if (!isset($_SESSION)) {
+        session_start();
+    } else {
+        session_destroy();
+        session_start();
+    }
+
+    // Rechercher les données relatives à cet utilisateur
+    $admin = AdminDAO::getOneByPseudo($pseudoA);
+    // Si l'utilisateur est connu (mail trouvé dans la BDD)
+    if (!is_null($admin)) {
+        $mdpBD = $admin->getMdpA();
+        $idA = $admin->getIdA();
+
+        ajouterMessage("mdpBD = $mdpBD");
+        // Si le mot de passe saisi correspond au mot de passe "haché" de la BDD
+        if (hash("sha256", $mdpA) == $mdpBD) {
+            // le mot de passe est celui de l'utilisateur dans la base de donnees
+            $_SESSION["idA"] = $idA;        // la clef est idU désormais
+            $_SESSION["pseudoA"] = $pseudoA;
+            $_SESSION["mdpA"] = $mdpBD;
+        }
+    }
+}
+
 /**
  * Fermeture de la session de connexion
  * @return void
@@ -46,6 +76,14 @@ function logout(): void {
     unset($_SESSION["idU"]);
     unset($_SESSION["mailU"]);
     unset($_SESSION["mdpU"]);
+}
+
+function logoutAsAdmin(): void {
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+    unset($_SESSION["idA"]);
+    unset($_SESSION["mdpA"]);
 }
 
 /**
@@ -62,6 +100,27 @@ function getMailULoggedOn(): string {
 }
 
 /**
+ * Identité de l'admin connecté
+ * @return string pseudo de l'admin connecté ou "" si aucun
+ */
+function getPseudoALoggedOn(): string
+{
+    if (isLoggedOnAsAdmin()) {
+        $ret = $_SESSION["pseudoA"];
+    } else {
+        $ret = "";
+    }
+}
+
+function isLoggedOnAsAdmin()
+{
+    if (!isset($_SESSION)) {
+        session_start();
+    }
+    return isset($_SESSION["idA"]);
+}
+
+/**
  * Identité de l'utilisateur connecté
  * @return int id de l'utilisateur connecté ou 0 si aucun
  */
@@ -73,6 +132,7 @@ function getIdULoggedOn(): int {
     }
     return $ret;
 }
+
 
 /**
  * Vérifie si l'utilisateur courant ($util) est bien connecté

@@ -2,7 +2,6 @@
 
 namespace modele\dao;
 
-use modele\dao\Bdd;
 use PDO;
 use PDOException;
 use Exception;
